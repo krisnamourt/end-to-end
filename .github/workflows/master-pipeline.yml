@@ -53,13 +53,11 @@ jobs:
       uses: actions/checkout@v2   
     - name: Terraform Deploy
       run: |
-        cd .github/terraform && terraform init && terraform apply --auto-approve    
-        export $(cat terraform/.env | xargs)
-        cat $ecr
-        echo "ECR=$ecr" >> $GITHUB_ENV
-        echo "CLUSTER=$cluster" >> $GITHUB_ENV
-        echo "ECSROLE=$ecs_role" >> $GITHUB_ENV
-        echo "TARGETARN=$target_arn" >> $GITHUB_ENV        
+        cd .github/terraform && terraform init && terraform apply --auto-approve  
+    - id: dotenv
+      uses: ./.github/actions/dotenv-action   
+      with:
+        path: .github/terraform/.env
 
     - name: Image Build and Push
       uses: kciter/aws-ecr-action@master
@@ -73,18 +71,18 @@ jobs:
         create_repo: false
     - name: Install ecs-cli
       run: |        
-        cat ${{ env.ECR }}
+        cat ${{ steps.dotenv.outputs.ecr }}
         sudo curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
         && sudo chmod 775 /usr/local/bin/ecs-cli
     - name: Deploy Application
       run: |
         sed -i "s|app_name|elb-python-api|" .github/ecs/ecs-compose.yml
         sed -i "s|image_app|$image_name|" .github/ecs/ecs-compose.yml
-        sed -i "s|tsk_role|${{ env.ECSROLE }}|" .github/ecs/ecs-compose.yml
-        sed -i "s|exec_role|${{ env.ECSROLE }}|" .github/ecs/ecs-compose.yml
+        sed -i "s|tsk_role|${{ steps.dotenv.outputs.ecs_role }}|" .github/ecs/ecs-compose.yml
+        sed -i "s|exec_role|${{ steps.dotenv.outputs.ecs_role }}|" .github/ecs/ecs-compose.yml
 
         ecs-cli compose --project-name elb-python-api -f .github/ecs/ecs-compose.yml --ecs-params .github/ecs/ecs-params.yml -c $cluster --region $AWS_REGION service up --launch-type FARGATE --create-log-groups --target-group-arn $target_arn --container-name api --container-port 8000 --timeout 10
       env:
-        image_name: ${{ env.ECR }}/python-api:${{ env.GITHUB_SHA }}
-        cluster: ${{ env.CLUSTER }}   
-        target_arn: ${{ env.TARGETARN }}   
+        image_name: ${{ steps.dotenv.outputs.ecr }}/python-api:${{ env.GITHUB_SHA }}
+        cluster: ${{ steps.dotenv.outputs.cluster }}
+        target_arn: ${{ steps.dotenv.outputs.target_arn }}
