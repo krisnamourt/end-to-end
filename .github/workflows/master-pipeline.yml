@@ -53,6 +53,7 @@ jobs:
       uses: actions/checkout@v2   
     - name: Terraform Deploy
       run: |
+        echo ${{ github.sha }}
         cd .github/terraform && terraform init && terraform apply --auto-approve  
     - id: dotenv
       uses: falti/dotenv-action@v0.2.5
@@ -67,7 +68,7 @@ jobs:
         account_id: 978827181454
         repo: python-api
         region: ${{ env.AWS_REGION }}
-        tags: latest,${{ github.sha }}
+        tags: ${{ github.sha }}
         create_repo: false
     - name: Install ecs-cli
       run: |        
