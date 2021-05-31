@@ -55,7 +55,7 @@ jobs:
       run: |
         cd .github/terraform && terraform init && terraform apply --auto-approve  
     - id: dotenv
-      uses: ./.github/actions/dotenv-action   
+      uses: falti/dotenv-action@v0.2.5
       with:
         path: .github/terraform/.env
 
