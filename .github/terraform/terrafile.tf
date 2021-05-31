@@ -18,7 +18,7 @@ module "base-infra" {
   repo_name    = "python-api"
 }
 
-module "c" {
+module "deploy" {
   source = "./modules/deploy"
 
   name    = "default-elb"

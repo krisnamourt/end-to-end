@@ -13,7 +13,7 @@ resource "aws_ecr_repository" "repo" {
 }
 
 resource "aws_iam_role" "task_role" {
-  name = "ecsTaskExecutionRole"
+  name = "Ecs-Task-Execution-Role"
 
   assume_role_policy = file("${path.module}/base_role.json")
 
