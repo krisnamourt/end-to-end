@@ -67,7 +67,7 @@ jobs:
         account_id: 978827181454
         repo: python-api
         region: ${{ env.AWS_REGION }}
-        tags: ${{ env.GITHUB_SHA }}
+        tags: latest,${{ github.sha }}
         create_repo: false
     - name: Install ecs-cli
       run: |        
