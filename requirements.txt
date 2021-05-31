@@ -1,0 +1,6 @@
+flask
+boto3
+gunicorn
+meinheld
+jsonpickle
+flask-swagger
