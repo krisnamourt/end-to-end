@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "task_role_attach2" {
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "catalog-sync-elastic-execution-policy"
+  name        = "ecs-execution-policy"
   description = "Db migrate flyway execution policy"
 
   policy = <<EOF
