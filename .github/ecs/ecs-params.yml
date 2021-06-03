@@ -12,5 +12,5 @@ run_params:
       subnets:
         - "subnet-1df27155"
       security_groups:
-        - "sg-5887ec26"
+        - "sg_task"
       assign_public_ip: DISABLED

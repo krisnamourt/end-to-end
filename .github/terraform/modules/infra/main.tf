@@ -41,7 +41,6 @@ resource "aws_iam_policy" "policy" {
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
-        "secretsmanager:*",
         "ecr:GetAuthorizationToken",
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
