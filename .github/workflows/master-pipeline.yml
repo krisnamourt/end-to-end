@@ -77,8 +77,9 @@ jobs:
       run: |
         sed -i "s|app_name|elb-python-api|" .github/ecs/ecs-compose.yml
         sed -i "s|image_app|$image_name|" .github/ecs/ecs-compose.yml
-        sed -i "s|tsk_role|${{ steps.dotenv.outputs.ecs_role }}|" .github/ecs/ecs-params.yml
+        sed -i "s|tsk_role|${{ steps.dotenv.outputs.app_role }}|" .github/ecs/ecs-params.yml
         sed -i "s|exec_role|${{ steps.dotenv.outputs.ecs_role }}|" .github/ecs/ecs-params.yml
+        sed -i "s|sg_task|${{ steps.dotenv.outputs.sg_task }}|" .github/ecs/ecs-params.yml
 
         ecs-cli compose --project-name elb-python-api -f .github/ecs/ecs-compose.yml --ecs-params .github/ecs/ecs-params.yml -c $cluster --region $AWS_REGION service up --launch-type FARGATE --create-log-groups --target-group-arn $target_arn --container-name api --container-port 8000 --timeout 10
       env:
